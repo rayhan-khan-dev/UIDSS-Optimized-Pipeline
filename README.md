@@ -4,53 +4,41 @@
 
 ## Universal Intelligent Decision Support System
 
-### **Evidence-First • Resource-Aware • Cross-Domain • Auditable RAG**
+### **A Resource-Aware, Evidence-First Retrieval-Augmented Generation Architecture for Cross-Domain Online Reviews**
+
+<br>
 
 <p>
-  <b>Turning unstructured customer reviews into verifiable, evidence-grounded decision intelligence — without expensive infrastructure.</b>
+  <b>
+    Transforming unstructured Google Maps business reviews into
+    verifiable, auditable, and evidence-grounded decision intelligence
+    under strict zero-cost infrastructure constraints.
+  </b>
 </p>
 
-<br/>
+<br>
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge\&logo=python\&logoColor=white)](https://www.python.org/)
 [![FAISS](https://img.shields.io/badge/Vector%20Engine-FAISS-0468B4?style=for-the-badge\&logo=meta\&logoColor=white)](https://github.com/facebookresearch/faiss)
 [![Gemini](https://img.shields.io/badge/LLM-Gemini%202.5%20Flash-8E75B2?style=for-the-badge\&logo=google\&logoColor=white)](https://ai.google.dev/)
-[![Embeddings](https://img.shields.io/badge/Embeddings-MiniLM--L6--v2-F9AB00?style=for-the-badge)](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
-[![Architecture](https://img.shields.io/badge/Architecture-Two--Plane-7B61FF?style=for-the-badge)]()
+[![Embeddings](https://img.shields.io/badge/Embeddings-all--MiniLM--L6--v2-F9AB00?style=for-the-badge)](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+[![Architecture](https://img.shields.io/badge/Architecture-Two--Plane%20Decoupled-7B61FF?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-Academic%20Research-555555?style=for-the-badge)]()
 
-<br/><br/>
+<br><br>
 
-**A zero-cost, resource-aware RAG architecture for trustworthy decision support from online reviews.**
+### **Evidence before generation. • Retrieval before reasoning. • Reliability before fluency.**
 
-<br/>
+<br>
 
 [📌 Overview](#-overview) •
 [🎯 Research Problem](#-research-problem) •
 [🏛️ Architecture](#️-system-architecture) •
-[⚙️ Pipeline](#️-end-to-end-pipeline) •
-[🧠 Intelligence Layer](#-intelligence-layer) •
-[🛡️ Reliability](#️-reliability--failure-resilience) •
-[📊 Evaluation](#-empirical-evaluation) •
-[🚀 Getting Started](#-getting-started) •
+[⚡ Contributions](#-key-engineering-contributions) •
+[📊 Audit](#-comparative-audit) •
+[🚀 Setup](#-getting-started) •
 [🔬 Case Studies](#-empirical-case-studies) •
-[📜 Research](#-research-direction)
-
----
-
-### 🔎 At a Glance
-
-| Dimension               |                 UIDSS                |
-| :---------------------- | :----------------------------------: |
-| **Retrieval**           |              100% Local              |
-| **Vector Database**     |                 FAISS                |
-| **Embedding Model**     |           all-MiniLM-L6-v2           |
-| **Generation**          |           Gemini 2.5 Flash           |
-| **Data Source**         |          Google Maps Reviews         |
-| **Domains**             |             Cross-Domain             |
-| **Failure Mode**        |      Evidence-First Degradation      |
-| **Infrastructure Cost** |                **$0**                |
-| **Primary Goal**        | **Verifiable Decision Intelligence** |
+[📜 Research](#-citation--research)
 
 </div>
 
@@ -58,125 +46,126 @@
 
 # 📌 Overview
 
-**UIDSS (Universal Intelligent Decision Support System)** is a **resource-aware, evidence-first Retrieval-Augmented Generation (RAG) architecture** designed to transform large collections of unstructured online reviews into structured, auditable, and decision-oriented intelligence.
+**UIDSS (Universal Intelligent Decision Support System)** is an **evidence-first, domain-extensible Retrieval-Augmented Generation (RAG) framework** designed to transform customer-review corpora into structured managerial and consumer decision intelligence.
 
-The system is designed around a simple principle:
+The core principle is simple:
 
-> **A decision-support system should never be more confident than its evidence.**
+> **The system should never be more confident than the evidence available to it.**
 
-Instead of treating an LLM as the source of truth, UIDSS establishes a strict separation between:
+UIDSS separates retrieval from generation through a **Two-Plane Decoupled Architecture**:
 
-**Evidence → Retrieval → Verification → Synthesis → Decision**
+```text
+                         UIDSS
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+    ┌────────────────────┐    ┌────────────────────┐
+    │  LOCAL EVIDENCE    │    │     GENERATION     │
+    │       PLANE        │    │        PLANE       │
+    │                    │    │                    │
+    │ • Ingestion        │    │ • Gemini 2.5 Flash │
+    │ • Deduplication    │    │ • Synthesis        │
+    │ • Embeddings       │    │ • Decision Report  │
+    │ • FAISS            │    │ • Quota-Aware      │
+    │ • Retrieval        │    │                    │
+    └─────────┬──────────┘    └─────────┬──────────┘
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                 Evidence-Grounded
+                  Decision Support
+```
 
-This architectural separation allows the system to remain useful even when the external LLM becomes unavailable, rate-limited, or unreliable.
+This means **retrieval remains locally available even when the external LLM becomes unavailable**.
+
+Instead of treating an API failure as a total system failure, UIDSS can transition into **Mode M2 — Degraded Evidence Mode**.
 
 ---
 
 # 🎯 Research Problem
 
-Traditional review-analysis systems usually fall into one of two extremes:
+Online business reviews contain valuable signals about:
 
-### ❌ Conventional Keyword Analytics
+* Customer satisfaction
+* Service quality
+* Cleanliness
+* Environment
+* Equipment
+* Food quality
+* Operational complaints
+* Conflicting experiences
+
+But raw reviews are difficult to convert into reliable decision intelligence.
+
+A simple keyword-based approach:
 
 ```text
-Reviews
-   ↓
-Keyword Matching
-   ↓
+Raw Reviews
+     ↓
+Keyword Search
+     ↓
 Frequency Counts
-   ↓
-Basic Statistics
+     ↓
+Basic Summary
 ```
 
-Fast, but unable to understand semantic meaning, conflicting opinions, or contextual relationships.
-
----
-
-### ❌ Conventional LLM-RAG
+A cloud-heavy RAG system:
 
 ```text
-Reviews
-   ↓
-Vector Database
-   ↓
+Raw Reviews
+     ↓
+Cloud Vector Database
+     ↓
 Cloud LLM
-   ↓
+     ↓
 Generated Answer
 ```
 
-More intelligent, but often dependent on:
-
-* Expensive infrastructure
-* External API availability
-* API quotas
-* Cloud vector databases
-* Large models
-* Continuous internet connectivity
-
-More importantly, a generated answer can still introduce **unsupported claims**.
-
----
-
-### ✅ UIDSS Approach
+UIDSS instead introduces an evidence-processing layer before generation:
 
 ```text
-                 ┌─────────────────────────┐
-                 │     Raw Review Corpus    │
-                 └────────────┬────────────┘
-                              ↓
-                 ┌─────────────────────────┐
-                 │ Evidence Normalization  │
-                 └────────────┬────────────┘
-                              ↓
-                 ┌─────────────────────────┐
-                 │ Semantic Retrieval      │
-                 │       (Local)           │
-                 └────────────┬────────────┘
-                              ↓
-                 ┌─────────────────────────┐
-                 │ Evidence Verification   │
-                 └────────────┬────────────┘
-                              ↓
-                    ┌─────────┴─────────┐
-                    │                   │
-              API Available        API Unavailable
-                    │                   │
-                    ↓                   ↓
-             LLM Synthesis       Direct Evidence
-                    │                   │
-                    └─────────┬─────────┘
-                              ↓
-                 ┌─────────────────────────┐
-                 │ Auditable Decision      │
-                 │        Report           │
-                 └─────────────────────────┘
+Raw Review Corpus
+       ↓
+Dynamic Ingestion
+       ↓
+Exact Deduplication
+       ↓
+Aspect + Conflict Signals
+       ↓
+Local Dense Embeddings
+       ↓
+FAISS Retrieval
+       ↓
+Domain-Aware Filtering
+       ↓
+Verified Evidence
+       │
+       ├───────────────┐
+       ▼               ▼
+   API Available    API Failure
+       │               │
+       ▼               ▼
+    Gemini          Mode M2
+       │               │
+       └───────┬───────┘
+               ▼
+     Auditable Decision Report
 ```
 
 ---
 
-# 💡 Core Philosophy
+# 🧭 Design Philosophy
 
-UIDSS is built around **five engineering principles**:
+UIDSS is built around five principles:
 
-### 1. Evidence First
-
-Every generated conclusion must originate from retrieved evidence.
-
-### 2. Local First
-
-The expensive and latency-sensitive retrieval layer remains completely local.
-
-### 3. Graceful Degradation
-
-External API failure should reduce system sophistication — **not destroy system functionality**.
-
-### 4. Domain Extensibility
-
-The architecture should work across domains without redesigning the entire pipeline.
-
-### 5. Auditability
-
-A user should be able to understand **why** the system reached a particular conclusion.
+| Principle                   | Design Goal                                           |
+| --------------------------- | ----------------------------------------------------- |
+| 🛡️ **Evidence First**      | Conclusions remain grounded in retrieved evidence     |
+| 🏠 **Local First**          | Core retrieval remains locally executable             |
+| 🔄 **Graceful Degradation** | API failure should not terminate the pipeline         |
+| 🌍 **Domain Extensibility** | Architecture can support multiple review domains      |
+| 🔍 **Auditability**         | Evidence, signals, and limitations remain inspectable |
 
 ---
 
@@ -185,489 +174,820 @@ A user should be able to understand **why** the system reached a particular conc
 UIDSS uses a **Two-Plane Decoupled Architecture**.
 
 ```mermaid
-flowchart TB
+flowchart TD
 
-    %% =========================
-    %% DATA ACQUISITION
-    %% =========================
-
-    A["🌐 Google Maps Reviews"]
-
-    A --> B["📥 CSV Data Handoff"]
-
-    B --> C["🔄 Dynamic Ingestion<br/>+ Field Mapping"]
-
-
-    %% =========================
-    %% PLANE 1
-    %% =========================
+    A["🌐 Google Maps Review Scraper"]
+    A --> B["📦 Batch CSV Handoff"]
 
     subgraph P1["🟢 PLANE 1 — LOCAL EVIDENCE PLANE"]
         direction TB
 
-        C --> D["🧹 Data Normalization"]
-
-        D --> E["🔐 MD5 Text Deduplication"]
-
-        E --> F["🧠 Aspect Extraction"]
-
-        F --> G["⚔️ Conflict Detection"]
-
-        G --> H["🔢 MiniLM Embeddings"]
-
-        H --> I[("⚡ FAISS<br/>Vector Index")]
-
-        I --> J["🎯 Domain-Aware<br/>Semantic Retrieval<br/>Top-k = 5"]
+        B --> C["🔄 Dynamic Ingestion<br/>+ Field Mapping"]
+        C --> D["🧹 Vectorized MD5<br/>Text Deduplication"]
+        D --> E["🧠 Aspect Extraction<br/>+ Conflict Detection"]
+        E --> F["🔢 all-MiniLM-L6-v2<br/>Dense Encoding"]
+        F --> G[("⚡ FAISS<br/>In-Memory Vector Index")]
+        G --> H["🎯 Domain-Aware<br/>Semantic Filter • k = 5"]
     end
 
-
-    %% =========================
-    %% PLANE 2
-    %% =========================
-
-    J --> K{"☁️ External LLM<br/>Available?"}
+    H --> I{"☁️ External API<br/>Available?"}
 
     subgraph P2["🟣 PLANE 2 — GENERATION PLANE"]
-        direction TB
-
-        K -->|"YES"| L["✨ Gemini 2.5 Flash<br/>Structured Synthesis"]
-
-        K -->|"NO / 429 / 503"| M["🛡️ Mode M2<br/>Direct Local Evidence"]
+        I -->|YES| J["✨ Gemini 2.5 Flash<br/>Structured Synthesis"]
+        I -->|NO / 429 / 503| K["🛡️ Mode M2<br/>Direct Local Evidence Extraction"]
     end
 
-    L --> N["📋 Auditable Decision Report"]
-
-    M --> N
-
-    N --> O["👤 Consumer / Managerial Decision"]
+    J --> L["📋 Auditable<br/>6-Point Decision Report"]
+    K --> L
 
 ```
 
 ---
 
-# 🔬 Why Two Planes?
+# 🏗️ Architectural Decomposition
 
-The system deliberately separates **retrieval** from **generation**.
+## 🟢 Plane 1 — Local Evidence Plane
 
-### Plane 1 — Evidence Plane
+The local plane contains the core evidence-processing infrastructure.
 
-Runs locally.
+### Dynamic Ingestion
+
+The pipeline does not depend entirely on rigid manual column assignments. Candidate matching and heuristics are used to identify relevant qualitative text fields.
+
+### Exact Content Deduplication
+
+UIDSS applies vectorized MD5 hashing using:
 
 ```text
-Data
- ↓
-Cleaning
- ↓
-Deduplication
- ↓
-Aspect Analysis
- ↓
-Embeddings
- ↓
-FAISS
- ↓
-Semantic Retrieval
+business_name :: review_text
 ```
 
-**No external LLM is required.**
+This prevents repeated review content from disproportionately affecting retrieval.
+
+### Domain-Aware Routing
+
+Metadata filtering separates domains such as:
+
+```text
+domain = gym
+domain = restaurant
+```
+
+This reduces the possibility of cross-domain evidence contamination.
+
+### Dense Semantic Retrieval
+
+```text
+Embedding Model : all-MiniLM-L6-v2
+Vector Dimension : 384
+Vector Engine    : FAISS
+Index Type       : Flat Inner Product
+Normalization    : Enabled
+Top-k             : 5
+```
+
+The retrieval index operates **in memory**, avoiding dependency on a managed cloud vector database.
 
 ---
 
-### Plane 2 — Generation Plane
-
-Uses the retrieved evidence for natural-language synthesis.
-
-```text
-Retrieved Evidence
-        ↓
-   Gemini API
-        ↓
-Structured Report
-```
-
-If the API becomes unavailable:
-
-```text
-Retrieved Evidence
-        ↓
-   Mode M2
-        ↓
-Direct Evidence Output
-```
-
-This creates a crucial property:
-
-> **The system loses generation capability before it loses evidence access.**
-
----
-
-# ⚙️ End-to-End Pipeline
-
-UIDSS follows a multi-stage evidence processing pipeline.
-
-```text
-┌──────────────────┐
-│  Review Corpus   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Data Ingestion   │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Field Mapping    │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Text Deduplication│
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Aspect Extraction│
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Conflict Analysis│
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ Dense Embeddings │
-└────────┬─────────┘
-         ↓
-┌──────────────────┐
-│ FAISS Retrieval  │
-└────────┬─────────┘
-         ↓
-┌────────────────────────┐
-│ Evidence Safety Filter │
-└────────────┬───────────┘
-             ↓
-       ┌─────┴─────┐
-       ↓           ↓
-   Gemini       Mode M2
-       ↓           ↓
-       └─────┬─────┘
-             ↓
-┌────────────────────────┐
-│ Decision Intelligence  │
-└────────────────────────┘
-```
-
----
-
-# 🧠 Intelligence Layer
-
-UIDSS is not simply a vector-search wrapper.
-
-The system introduces multiple reasoning-oriented components between retrieval and generation.
-
----
-
-## 🔹 1. Dynamic Field Mapping
-
-The ingestion layer is designed to tolerate variations in review datasets.
-
-Instead of requiring one rigid schema:
-
-```text
-review
-rating
-author
-date
-```
-
-UIDSS can dynamically identify relevant fields before indexing.
-
-This allows the same retrieval architecture to operate across multiple datasets.
-
----
-
-## 🔹 2. MD5-Based Text Deduplication
-
-Duplicate review text is detected before embedding.
-
-```text
-Raw Reviews
-     │
-     ├── Review A
-     ├── Review B
-     ├── Review A  ← Duplicate
-     └── Review C
-             ↓
-        MD5 Hashing
-             ↓
-     Unique Evidence
-```
-
-Benefits:
-
-* Lower embedding cost
-* Smaller index
-* Less redundant evidence
-* Reduced retrieval noise
-
----
-
-## 🔹 3. Aspect Extraction
-
-Reviews are transformed from generic text into decision-relevant aspects.
-
-Examples:
-
-```text
-Restaurant
- ├── Food
- ├── Service
- ├── Cleanliness
- ├── Price
- └── Atmosphere
-
-Gym
- ├── Equipment
- ├── Trainer
- ├── Cleanliness
- ├── Crowd
- └── Membership Experience
-```
-
-This allows the system to answer **aspect-specific questions** instead of simply retrieving generally similar reviews.
-
----
-
-## 🔹 4. Conflict Detection
-
-Real-world reviews frequently disagree.
-
-For example:
-
-```text
-Reviewer A:
-"Very clean and well maintained."
-
-Reviewer B:
-"The equipment area was dirty."
-
-Reviewer C:
-"Clean overall, but the washroom needs improvement."
-```
-
-A naive summarizer may produce:
-
-> "The gym is clean."
-
-UIDSS instead attempts to preserve the disagreement.
-
-```text
-Overall Cleanliness
-        │
-        ├── Positive Evidence
-        │
-        ├── Negative Evidence
-        │
-        └── Localized Conflict
-```
-
-This is critical for decision support because **conflicting evidence is itself information**.
-
----
-
-# 🎯 Semantic Retrieval
-
-UIDSS uses:
-
-### Embedding Model
-
-`all-MiniLM-L6-v2`
-
-### Vector Engine
-
-`FAISS`
-
-### Retrieval Strategy
-
-**Domain-aware Top-k semantic retrieval**
-
-Default:
-
-```text
-k = 5
-```
-
-Conceptually:
-
-```text
-User Query
-     ↓
-Query Embedding
-     ↓
-FAISS Similarity Search
-     ↓
-Top-k Evidence
-     ↓
-Domain / Aspect Filtering
-     ↓
-Verified Evidence Set
-```
-
-Unlike keyword search:
-
-```text
-"good equipment"
-```
-
-semantic retrieval can identify conceptually related evidence such as:
-
-```text
-"The machines are modern and there
-is enough equipment for most workouts."
-```
-
----
-
-# 🛡️ Evidence Safety & Hallucination Control
-
-One of the central goals of UIDSS is **not merely generating fluent answers, but preventing unsupported claims**.
-
-The system establishes a strict boundary:
-
-```text
-                 ┌───────────────────────┐
-                 │     Retrieved Facts   │
-                 └───────────┬───────────┘
-                             ↓
-                  ┌─────────────────────┐
-                  │ Evidence Validation │
-                  └──────────┬──────────┘
-                             ↓
-              ┌──────────────┴──────────────┐
-              │                             │
-          Supported                     Unsupported
-              │                             │
-              ↓                             ↓
-         Can Generate                 Must Not Claim
-```
-
-For example, if the review corpus does **not** contain verified pricing:
-
-❌ The system should not invent:
-
-> "The monthly membership costs ৳2,000."
-
-Instead:
-
-✅ It should state that pricing information is unavailable from the evidence corpus.
-
-This principle can be summarized as:
-
-> **Absence of evidence is not permission to generate a fact.**
-
----
-
-# ☁️ Quota-Aware Generation
-
-Cloud APIs are inherently unreliable from the perspective of a local research prototype.
-
-Possible failures include:
-
-```text
-HTTP 429 → Rate Limit
-HTTP 503 → Service Unavailable
-Network Failure
-API Timeout
-Quota Exhaustion
-```
-
-UIDSS therefore implements **Mode M2 — Evidence Degradation**.
-
----
-
-## 🔄 Mode M1 — Full Synthesis
+# 🟣 Plane 2 — Generation Plane
 
 When the external API is available:
 
 ```text
 Retrieved Evidence
-        ↓
+       ↓
 Gemini 2.5 Flash
-        ↓
-Structured Reasoning
-        ↓
+       ↓
+Structured Synthesis
+       ↓
 6-Point Decision Report
 ```
 
+The model is conditioned on retrieved evidence rather than being treated as an unrestricted source of business facts.
+
+The synthesis budget was expanded to **2,048 tokens**, addressing the truncation problem found in the earlier prototype.
+
 ---
 
-## 🛡️ Mode M2 — Local Evidence Fallback
+# ⚡ Key Engineering Contributions
 
-When the API is unavailable:
+## 01 — 🛡️ Production Resilience
+
+UIDSS introduces an automated degradation mechanism for external API failures.
 
 ```text
-Retrieved Evidence
-        ↓
-Evidence Extraction
-        ↓
-Direct Local Output
+HTTP 429 → Rate Limit / Quota Exhaustion
+HTTP 503 → Service Unavailable
 ```
 
-The system remains operational.
-
-### Failure does not become total failure.
-
-Instead:
+Instead of terminating:
 
 ```text
-Normal
-████████████████████  Full Intelligence
-
 API Failure
-██████████████░░░░░░  Evidence Intelligence
+    ↓
+Mode M2
+    ↓
+Local FAISS Retrieval
+    ↓
+Top-k Evidence
+    ↓
+Aspect Signals + Similarity Scores
 ```
 
-This is an important distinction between **availability degradation** and **system failure**.
+The evidence layer therefore remains operational even when cloud generation is unavailable.
 
 ---
 
-# 📋 Auditable Decision Reports
+## 02 — 🧹 Schema Harmonization
 
-UIDSS produces a structured **6-point decision report** rather than an unrestricted conversational answer.
-
-A typical report can organize evidence around:
+The initial prototype encountered issues including:
 
 ```text
-┌────────────────────────────────────┐
-│       UIDSS DECISION REPORT        │
-├────────────────────────────────────┤
-│ 01. Overall Assessment             │
-│ 02. Key Positive Evidence          │
-│ 03. Key Negative Evidence          │
-│ 04. Aspect-Level Findings          │
-│ 05. Conflicting Evidence           │
-│ 06. Final Decision Guidance        │
-└────────────────────────────────────┘
+ValueError
+AttributeError
+Nested Series collisions
+Incorrect numeric/text interpretation
 ```
 
-This structure makes the output easier to:
+The optimized pipeline introduces candidate matching and string-length heuristics to resolve qualitative text fields more reliably.
 
-* Audit
-* Compare
-* Reproduce
-* Evaluate
-* Present to decision-makers
+---
+
+## 03 — 🔍 Domain Aspect & Conflict Detection
+
+UIDSS extracts domain-specific signals such as:
+
+```text
+Quality
+Service
+Cleanliness
+Environment
+```
+
+It also examines potential inconsistencies between textual sentiment and star ratings:
+
+```text
+Review Text
+     │
+     ├──────► Sentiment
+     │
+     └──────► Star Rating
+                 │
+                 ▼
+         Consistency Check
+                 │
+        ┌────────┴────────┐
+        ▼                 ▼
+   Consistent       Potential Conflict
+```
+
+Examples of investigated signals include:
+
+```text
+Hidden Dissatisfaction
+Politeness Bias
+```
+
+---
+
+## 04 — 🚫 Conservative Evidence Policy
+
+UIDSS distinguishes between:
+
+### Observed Review Evidence
+
+and
+
+### Unobserved Transactional Facts
+
+For example, if the dataset does not establish a verified membership price:
+
+```text
+❌ "The monthly fee is ৳2,000."
+```
+
+The system should instead abstain:
+
+```text
+✓ Pricing information is not established
+  by the available review evidence.
+```
+
+This makes **abstention preferable to unsupported factual generation**.
+
+---
+
+# 🔄 Mode M1 vs Mode M2
+
+## 🟢 Mode M1 — Full Synthesis
+
+```text
+User Query
+    ↓
+Domain Filtering
+    ↓
+FAISS Retrieval
+    ↓
+Top-k Evidence
+    ↓
+Gemini 2.5 Flash
+    ↓
+Structured Synthesis
+    ↓
+Decision Report
+```
+
+## 🟠 Mode M2 — Degraded Evidence Mode
+
+Triggered when the external generation layer is unavailable.
+
+```text
+User Query
+    ↓
+Domain Filtering
+    ↓
+FAISS Retrieval
+    ↓
+Top-k Evidence
+    ↓
+Direct Local Evidence
+    ↓
+Evidence + Aspect Signals
++ Similarity Scores
+```
+
+### Key architectural distinction
+
+> **Generation can degrade. Evidence retrieval does not have to.**
 
 ---
 
 # 📊 Comparative Audit
 
-UIDSS was designed to improve upon conventional review-analysis pipelines.
+The optimized implementation addresses concrete weaknesses identified in the initial prototype.
 
-| Capability           | Keyword Analytics | Basic RAG | UIDSS |
-| -------------------- | :---------------: | :-------: | :---: |
-| Semantic Retrieval   |         ❌         |     ✅     |   ✅   |
-| Local Retrieval      |         ⚠️        |     ❌     |   ✅   |
-| Aspect Awareness     |         ❌         |     ⚠️    |   ✅   |
-| Conflict Detection   |         ❌         |     ⚠️    |   ✅   |
-| Evidence Boundary    |         ❌         |     ⚠️    |   ✅   |
-| API Failure Handling |         ❌         |     ❌     |   ✅   |
-| Zero-Cost Retrieval  |         ⚠️        |     ❌     |   ✅   |
-| Cross-Domain Design  |         ⚠️        |     ⚠️    |   ✅   |
-| Direct Evidence Fa   |                   |           |       |
+| Dimension            | Initial Prototype                                            | Optimized Implementation                  |
+| -------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| **Ingestion**        | Nested Series collisions and unreliable field interpretation | Dynamic candidate resolution + heuristics |
+| **Deduplication**    | No structural deduplication                                  | Vectorized MD5 content hashing            |
+| **Vector Storage**   | ChromaDB file-lock issues in Colab                           | In-memory FAISS                           |
+| **Domain Isolation** | Mixed sources without domain tagging                         | Metadata-driven routing                   |
+| **Fault Tolerance**  | Pipeline could crash on `429/503`                            | Automatic Mode M2 fallback                |
+| **Token Budget**     | ~700 tokens; possible truncation                             | 2,048-token synthesis                     |
+| **Evidence Policy**  | Higher inference risk                                        | Conservative evidence boundary            |
+
+---
+
+# 📉 Deduplication Impact
+
+One of the measurable improvements is the reduction of redundant documents before indexing.
+
+```text
+             RAW REVIEW DATA
+                    │
+                    ▼
+              1,210 Records
+                    │
+                    ▼
+           Vectorized MD5 Hash
+                    │
+                    ▼
+              379 Unique
+               Documents
+```
+
+This means repeated review content is removed before semantic retrieval.
+
+---
+
+# 🎯 Retrieval Pipeline
+
+```text
+Review Corpus
+     ↓
+all-MiniLM-L6-v2
+     ↓
+384-D Normalized Vectors
+     ↓
+FAISS Inner-Product Search
+     ↓
+Domain-Aware Filtering
+     ↓
+Top-k = 5
+     ↓
+Verified Evidence
+```
+
+The resulting retrieval layer is:
+
+* Local
+* Lightweight
+* Inspectable
+* Cloud-vector-database independent
+
+---
+
+# 📋 Decision Report
+
+The generation layer is designed around a structured **6-point executive synthesis**:
+
+```text
+┌─────────────────────────────────────────┐
+│         UIDSS DECISION REPORT           │
+├─────────────────────────────────────────┤
+│ 01 │ Executive Summary                  │
+│ 02 │ Key Findings / Detected Aspects    │
+│ 03 │ Positive Evidence                  │
+│ 04 │ Negative / Conflicting Evidence    │
+│ 05 │ Limitations / Confidence           │
+│ 06 │ Grounded Evidence References       │
+└─────────────────────────────────────────┘
+```
+
+The goal is not simply to generate a fluent answer, but to produce a result that remains connected to the evidence used to construct it.
+
+---
+
+# 🚀 Getting Started
+
+## 1. Clone
+
+```bash
+git clone https://github.com/your-username/UIDSS-Optimized-Pipeline.git
+cd UIDSS-Optimized-Pipeline
+```
+
+## 2. Install Dependencies
+
+```bash
+pip install sentence-transformers faiss-cpu google-genai pandas numpy
+```
+
+## 3. Prepare Dataset
+
+```text
+UIDSS-Optimized-Pipeline/
+│
+├── dhaka_gym.csv
+├── dhaka_restaurants.csv
+└── UIDSS_Master_Pipeline.ipynb
+```
+
+## 4. Run
+
+Open:
+
+```text
+UIDSS_Master_Pipeline.ipynb
+```
+
+Execution flow:
+
+```text
+Cell 0
+  ↓
+Dependencies
+
+Cell 1
+  ↓
+Ingestion
+  ↓
+Deduplication
+  ↓
+Aspect Extraction
+  ↓
+FAISS Index
+
+Cell 2
+  ↓
+Gemini Configuration
+  ↓
+Interactive Querying
+```
+
+The implementation is designed for **Google Colab or local Python environments**.
+
+---
+
+# 🔐 API Configuration
+
+The generation plane requires a Gemini API key.
+
+Example:
+
+```bash
+GEMINI_API_KEY="your_api_key"
+```
+
+**Never commit API credentials to the repository.**
+
+The local retrieval plane remains independent from the external generation layer.
+
+---
+
+# 🔬 Empirical Case Studies
+
+## 🏋️ Case Study A — Gym Recommendation
+
+### Query
+
+> **"Which gym is best in Dhaka for personal workout and good environment?"**
+
+UIDSS identifies the target domain and retrieves evidence around:
+
+```text
+Cleanliness
+Environment
+Equipment
+Customer Service
+```
+
+The recorded synthesis prioritizes:
+
+```text
+Aamra Active
+Dhaka Gym
+```
+
+based on retrieved operational evidence.
+
+The system also reports uncertainty around personal trainer availability because the relevant evidence is split across Nakhalpara branches.
+
+### What makes the result useful?
+
+```text
+Recommendation
+      +
+Detected Aspects
+      +
+Limitations
+      +
+Confidence
+      +
+Evidence Records
+```
+
+Rather than presenting a recommendation without context.
+
+---
+
+## 🛡️ Case Study B — HTTP 429 Resilience
+
+A resilience audit was performed after the free-tier Gemini quota was exhausted.
+
+Instead of terminating:
+
+```text
+Gemini API
+    │
+    X
+    │
+ HTTP 429
+    │
+    ▼
+ Mode M2
+    │
+    ▼
+Local FAISS Evidence
+```
+
+The system exposed local evidence containing fields such as:
+
+```text
+Business
+Rating
+Retrieval Score
+Aspect Signals
+Conflict Flag
+Review Evidence
+```
+
+The recorded audit reports:
+
+> **Operational Continuity: 100% Preserved without Runtime Crash**
+
+This demonstrates the distinction between **generation-layer failure** and **retrieval-layer availability**.
+
+---
+
+# 🌍 Cross-Domain Design
+
+The architecture is designed to operate across multiple review domains.
+
+Current demonstrated domains:
+
+```text
+              UIDSS
+                │
+        ┌───────┴────────┐
+        │                │
+        ▼                ▼
+    🏋️ GYMS        🍽️ RESTAURANTS
+        │                │
+        ▼                ▼
+    Equipment          Food
+    Trainers           Service
+    Environment        Cleanliness
+    Cleanliness        Environment
+```
+
+The retrieval architecture remains shared while domain-specific aspects and metadata routing can vary.
+
+Potential future domains include:
+
+```text
+🏨 Hotels
+🏥 Healthcare Services
+🎓 Universities
+🛒 E-commerce
+✈️ Travel
+🏠 Real Estate
+🏢 Consumer Services
+```
+
+These represent **architectural extension targets**, not claims of current implementation.
+
+---
+
+# 🧪 Research Evaluation
+
+UIDSS can be evaluated across multiple dimensions rather than answer fluency alone.
+
+### Retrieval
+
+```text
+Precision@k
+Recall@k
+Semantic Relevance
+Aspect Coverage
+```
+
+### Evidence Grounding
+
+```text
+Evidence Completeness
+Provenance Preservation
+Unsupported Claim Rate
+Conflict Preservation
+```
+
+### Generation
+
+```text
+Faithfulness
+Relevance
+Consistency
+Decision Usefulness
+```
+
+### Reliability
+
+```text
+429 Recovery
+503 Recovery
+Fallback Success
+Pipeline Continuity
+```
+
+### Resource Efficiency
+
+```text
+Memory Consumption
+Index Construction Time
+Retrieval Latency
+External API Dependency
+Infrastructure Cost
+```
+
+---
+
+# 📦 Resource-Aware Infrastructure
+
+UIDSS deliberately avoids requiring:
+
+```text
+❌ Managed Vector Database
+❌ Dedicated Retrieval Server
+❌ Expensive Cloud Compute
+❌ High-Tier LLM Infrastructure
+```
+
+Instead:
+
+```text
+┌──────────────────────────────────┐
+│          LOCAL MACHINE           │
+│                                  │
+│ Python                           │
+│ Pandas                           │
+│ Sentence Transformers            │
+│ FAISS                            │
+│ Data Processing                  │
+│ Evidence Retrieval               │
+└────────────────┬─────────────────┘
+                 │
+                 ▼
+        Optional External LLM
+```
+
+This makes the core retrieval architecture suitable for experimentation under strict resource constraints.
+
+---
+
+# ⚠️ Limitations
+
+UIDSS is a research-oriented implementation.
+
+### Review Bias
+
+Online reviews represent individual experiences and may not perfectly represent the underlying business.
+
+### Evidence Coverage
+
+The system cannot establish facts absent from the available review corpus.
+
+### Domain Specificity
+
+Aspect extraction currently relies partly on domain-specific lexical signals.
+
+### External Generation
+
+Full synthesis still depends on external LLM availability.
+
+### Data Quality
+
+Scraped review datasets may contain duplicates, incomplete information, inconsistent ratings, or noisy narratives.
+
+---
+
+# 📈 Research Roadmap
+
+### ✅ Milestone 1
+
+**Vectorized MD5 Exact-Text Deduplication Engine**
+
+### ✅ Milestone 2
+
+**Metadata-Driven Pre-Retrieval Domain Routing**
+
+### ✅ Milestone 3
+
+**Degraded Operating Mode — Mode M2**
+
+### ⏳ Milestone 4
+
+**Streaming scraper integration with dynamic index refreshment**
+
+### ⏳ Milestone 5
+
+**On-premise Small Language Model (SLM) integration for 100% offline synthesis**
+
+The first three milestones are implemented; the latter two remain future work.
+
+---
+
+# 🔮 Future Research
+
+```text
+                    UIDSS
+                      │
+          ┌───────────┼───────────┐
+          │           │           │
+          ▼           ▼           ▼
+      Streaming    Local SLM   Dynamic
+      Retrieval    Generation  Indexing
+          │           │           │
+          └───────────┼───────────┘
+                      ▼
+              Fully Local / Hybrid
+              Decision Intelligence
+```
+
+Potential directions include:
+
+* Streaming data ingestion
+* Dynamic index refresh
+* On-premise SLM integration
+* Fully offline synthesis
+* Advanced evidence verification
+* Larger cross-domain evaluation
+* Reliability benchmarking
+
+---
+
+# 🧠 Core Reliability Principle
+
+<div align="center">
+
+## **When evidence disappears, confidence must disappear with it.**
+
+</div>
+
+The UIDSS philosophy can therefore be summarized as:
+
+```text
+Retrieve what exists.
+        ↓
+Verify what was retrieved.
+        ↓
+Preserve conflicting evidence.
+        ↓
+Avoid unsupported claims.
+        ↓
+Degrade gracefully when infrastructure fails.
+```
+
+---
+
+# 🏆 What UIDSS Demonstrates
+
+UIDSS combines:
+
+```text
+Semantic Retrieval
+        +
+Local Vector Search
+        +
+Domain Routing
+        +
+Evidence Constraints
+        +
+Conflict Signals
+        +
+Structured Generation
+        +
+Fault Tolerance
+        +
+Graceful Degradation
+```
+
+The result is **not simply a chatbot over reviews**.
+
+It is an **evidence-processing and decision-support architecture** designed to keep its evidence layer operational even when its generation layer is unavailable.
+
+---
+
+# 📜 Citation & Research
+
+If you use UIDSS or its architectural framework in academic or research work:
+
+```bibtex
+@article{jahan2026uidss,
+  title={UIDSS: A Resource-Aware Evidence-First Retrieval-Augmented Decision Support Architecture for Cross-Domain Online Business Reviews},
+  author={Jahan, Nusrat},
+  journal={Department of Computer Science and Engineering, United International University},
+  year={2026}
+}
+```
+
+The citation metadata is taken from the supplied project README.
+
+---
+
+# 🤝 Contributing
+
+Research-oriented contributions are welcome in areas such as:
+
+* Retrieval evaluation
+* Evidence verification
+* Hallucination mitigation
+* Domain adaptation
+* Local LLM integration
+* Benchmark development
+* Fault-tolerance testing
+* Resource optimization
+
+Please open an issue before making major architectural changes.
+
+---
+
+# 📄 License
+
+This project is released under an **Academic Research License**.
+
+Please review the repository license before using the implementation for commercial purposes.
+
+---
+
+<div align="center">
+
+<br>
+
+# 🧠 UIDSS
+
+### **Evidence before generation.**
+
+### **Retrieval before reasoning.**
+
+### **Reliability before fluency.**
+
+<br>
+
+**A resource-aware architecture for evidence-grounded decision intelligence.**
+
+<br>
+
+⭐ **Star the repository if you find the architecture interesting.**
+
+</div>
